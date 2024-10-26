@@ -1,8 +1,8 @@
 "use client";
 
-import {FormEvent} from "react";
-import {signIn, SignInResponse} from "next-auth/react";
-import {useRouter} from "next/navigation";
+import { FormEvent } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const router = useRouter();

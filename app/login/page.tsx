@@ -1,7 +1,13 @@
 import Link from "next/link";
 import LoginForm from "@/app/login/form";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function loginPage() {
+export default async function loginPage() {
+  const session = await getServerSession();
+  if (session) {
+    redirect("/");
+  }
   return (
     <main>
       <div>

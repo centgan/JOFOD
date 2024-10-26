@@ -1,11 +1,13 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
 import {query} from "@/database";
-import {NextResponse} from "next/server";
 
 const handler = NextAuth({
   session: {
     strategy: 'jwt',
+  },
+  pages: {
+    signIn: "/login",
   },
   providers: [
     CredentialsProvider({
