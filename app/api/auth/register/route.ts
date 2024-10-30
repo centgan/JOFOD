@@ -1,14 +1,39 @@
 import {NextResponse} from "next/server";
 import { query } from '@/database';
+import formData from 'form-data';
+import Mailgun from 'mailgun.js';
+import {randomUUID} from "node:crypto";
+import {redirect} from "next/navigation";
 
-// for now this will create the uuid I will deal with the proper way later if there even is a proper way
-// function generateUUID() {
-//   return 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-//     const r = Math.random() * 16 | 0,
-//       v = c === 'x' ? r : (r & 0x3 | 0x8);
-//     return v.toString(16);
-//   });
-// }
+const API_KEY = process.env.MAILGUN_API_KEY || ''
+const DOMAIN = process.env.MAILGUN_DOMAIN || ''
+
+async function emailVerif(user) {
+  const token = `${randomUUID()}${randomUUID()}`.replace(/-/g, '')
+
+  // write token to database
+  console.log(user);
+  console.log(user.id, token);
+  const write_sql = 'INSERT defaultdb.activate_token (user_id, token) VALUES (?, ?);';
+  const write_params = [user.id, token];
+  const write_res = await query(write_sql, write_params);
+  if (write_res.affectedRows === 0) {
+    return NextResponse.json({ error: 'Database error' }, {status: 500});
+  }
+
+  const mailgun = new Mailgun(formData);
+  const client = mailgun.client({ username: 'api', key: API_KEY });
+
+  const messageData = {
+    from: `Example Email <mailgun@${DOMAIN}>`,
+    to: user.email,
+    subject: 'Please Activate Your Account',
+    text: `Hello ${user.first}, please activate your account by clicking this link: http://localhost:3000/api/activate/${token}`,
+  };
+
+  await client.messages.create(DOMAIN, messageData);
+  // redirect('/register/success');
+}
 
 async function employeeHandler(request_json) {
   try {
@@ -45,10 +70,15 @@ async function employeeHandler(request_json) {
         const params_added = [results.insertId, location]
         const res = await query(addition, params_added);
         if (res.affectedRows > 0) {
+          request_json.id = results.insertId;
+          console.log(request_json);
+          await emailVerif(request_json);
           return NextResponse.json({ user_id: results.insertId }, {status: 200 });
         }
         return NextResponse.json({ error: 'Database issue' }, {status: 500 });
       }
+      request_json.id = results.insertId;
+      await emailVerif(request_json);
       return NextResponse.json({ user_id: results.insertId }, {status: 200 });
     }
     return NextResponse.json({ error: 'Database issue' }, {status: 500 });
@@ -115,10 +145,14 @@ async function employerHandler(request_json) {
         const params_added = [results.insertId, location]
         const res = await query(addition, params_added);
         if (res.affectedRows > 0) {
+          request_json['id'] = results.insertId;
+          await emailVerif(request_json);
           return NextResponse.json({ user_id: results.insertId }, {status: 200 });
         }
         return NextResponse.json({ error: 'Database issue' }, {status: 500 });
       }
+      request_json['id'] = results.insertId;
+      await emailVerif(request_json);
       return NextResponse.json({ user_id: results.insertId }, {status: 200 });
     }
     return NextResponse.json({ error: 'Database Issue' }, {status: 500 });
