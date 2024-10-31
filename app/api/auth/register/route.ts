@@ -18,7 +18,7 @@ async function emailVerif(user) {
   const write_params = [user.id, token];
   const write_res = await query(write_sql, write_params);
   if (write_res.affectedRows === 0) {
-    return NextResponse.json({ error: 'Database error' }, {status: 500});
+    throw new Error('couldnt write to database');
   }
 
   const mailgun = new Mailgun(formData);
@@ -32,7 +32,9 @@ async function emailVerif(user) {
   };
 
   await client.messages.create(DOMAIN, messageData);
-  // redirect('/register/success');
+  return null;
+  // redirect is handled by client side maybe would be better for server side but for now just making it in client side
+  // redirect('/register/email-verif');
 }
 
 async function employeeHandler(request_json) {
@@ -78,7 +80,9 @@ async function employeeHandler(request_json) {
         return NextResponse.json({ error: 'Database issue' }, {status: 500 });
       }
       request_json.id = results.insertId;
+      console.log(request_json);
       await emailVerif(request_json);
+      console.log('post');
       return NextResponse.json({ user_id: results.insertId }, {status: 200 });
     }
     return NextResponse.json({ error: 'Database issue' }, {status: 500 });

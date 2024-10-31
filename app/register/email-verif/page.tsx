@@ -1,7 +1,7 @@
 export default function Success() {
   return (
     <div>
-      hey success
+      hey check your inbox to verify the email.
     </div>
   )
 }

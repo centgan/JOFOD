@@ -68,6 +68,7 @@ export default function EmployerRegistrationPage() {
         userType: 'employer',
       }),
     });
+
     if (response?.status === 409) {
       setEmailExists(true);
       console.log('email exists already');
@@ -77,7 +78,9 @@ export default function EmployerRegistrationPage() {
       console.log('internal error occurred');
       return;
     } else {
-      //redirect
+      // redirect to get email verified page
+      console.log('should be pushing to new route now')
+      router.push('/register/email-verif')
       setEmailExists(false);
       setInternalError(false);
     }
