@@ -96,6 +96,9 @@ export default function EmployeeRegistrationPage() {
       return;
     } else {
       //redirect
+      // find this to be kind of slow, so I need to incorporate some kind of sign that the request has gone through or
+      // I need to make it faster.
+      router.push('/register/email-verif');
       setEmailExists(false);
       setInternalError(false);
     }
