@@ -29,7 +29,8 @@ export default function LoginForm() {
     if (!response.ok) {
       setError(response.error || '');
     } else {
-      router.push('/');
+      // push to first dashboard/add-info and then once completed can then push to home page
+      router.push('/dashboard/add-info');
     }
   };
 

@@ -1,14 +1,28 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
+import NextAuth, {NextAuthOptions} from "next-auth";
 import {query} from "@/database";
 import {NextResponse} from "next/server";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({token, user}) {
+      if (user) {
+        token.userType = user.userType;
+        token.first = user.first;
+      }
+      return token; // Return the modified token
+    },
+    async session({session, token}) {
+      session.user.userType = token.userType; // Add role to the session object
+      session.user.name = token.first;
+      return session; // Return the modified session
+    },
   },
   providers: [
     CredentialsProvider({
@@ -16,7 +30,7 @@ const handler = NextAuth({
         user: {},
         password: {}
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // console.log(credentials);
 
         // wondering if this is really even necessary because I don't know if we're going to use a username
@@ -43,10 +57,14 @@ const handler = NextAuth({
         return {
           id: results[0].id,
           email: results[0].email,
+          first: results[0].first,
+          userType: results[0].is_employer ? 'Employer' : 'Employee',
         }
       }
     })
   ],
-})
+}
+
+const handler = NextAuth(authOptions);
 
 export {handler as GET, handler as POST}
