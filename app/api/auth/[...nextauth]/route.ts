@@ -1,7 +1,6 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth, {NextAuthOptions} from "next-auth";
 import {query} from "@/database";
-import {NextResponse} from "next/server";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -11,17 +10,28 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({token, user}) {
+    async jwt({token, user, session, trigger}) {
+      if (trigger === 'update' && session?.first_time !== undefined) {
+        token.first_time = session.first_time;
+      }
       if (user) {
         token.userType = user.userType;
-        token.first = user.first;
+        token.id = user.id;
+        token.name = user.name;
+        token.first_time = user.first_time;
+        if (user.userType === 'Employer') token.company_id = user.company_id;
       }
-      return token; // Return the modified token
+      return token;
     },
     async session({session, token}) {
-      session.user.userType = token.userType; // Add role to the session object
-      session.user.name = token.first;
-      return session; // Return the modified session
+      if (token){
+        session.user.userType = token.userType;
+        session.user.name = token.name;
+        session.user.id = token.id;
+        session.user.first_time = token.first_time;
+        if (token.userType === 'Employer') session.user.company_id = token.company_id;
+      }
+      return session;
     },
   },
   providers: [
@@ -38,6 +48,7 @@ export const authOptions: NextAuthOptions = {
         const sql = 'SELECT * from defaultdb.users WHERE email=?;';
         const params = [credentials?.user];
         const results = await query(sql, params);
+        console.log(results);
 
         // probably return different values and based on the returned value throw different errors on the ui
         // check if user exists
@@ -57,8 +68,10 @@ export const authOptions: NextAuthOptions = {
         return {
           id: results[0].id,
           email: results[0].email,
-          first: results[0].first,
+          name: results[0].first_name + ' ' + results[0].last_name,
           userType: results[0].is_employer ? 'Employer' : 'Employee',
+          company_id: results[0].company_id,
+          first_time: results[0].first_time,
         }
       }
     })

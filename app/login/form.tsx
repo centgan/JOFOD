@@ -24,13 +24,12 @@ export default function LoginForm() {
       redirect: false,
     })) as SignInResult;
 
-    // console.log({ response });
     // if invalid response then don't go anywhere and just show errors to user
     if (!response.ok) {
       setError(response.error || '');
     } else {
       // push to first dashboard/add-info and then once completed can then push to home page
-      router.push('/dashboard/add-info');
+      router.push('/dashboard');
     }
   };
 

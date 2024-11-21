@@ -2,6 +2,8 @@
 import React, {useEffect, useState} from "react";
 import Select from "react-select";
 import {h} from "preact";
+import {Session} from "next-auth";
+import {useSession} from "next-auth/react";
 
 interface AddEmployee {
   cycleType: string;
@@ -19,6 +21,10 @@ interface AddEmployee {
 interface OptionType {
   value: string
   label: string
+}
+
+interface AddEmployeeProps {
+  session: Session
 }
 
 // for now this will get really messy but will hardcode the searchable dropdown options for now
@@ -207,7 +213,7 @@ const Step2 = ({ formData, handleChange }) => {
           <option value="3">3rd Year</option>
           <option value="4">4th Year</option>
           <option value="5">5th Year</option>
-          <option value="3">6th Year &gt;</option>
+          <option value="3">6th Year &lt;</option>
         </select>
         {/*<input*/}
         {/*  type="text"*/}
@@ -448,6 +454,7 @@ const AddEmployee = () => {
     studyYear: "",
     university: ""
   });
+  const { data: session, status, update } = useSession();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | OptionType, name:string, index?: number) => {
     console.log(name, index);
