@@ -13,3 +13,16 @@ export interface AddEmployer {
   values: string;
   mission: string;
 }
+
+export interface AddEmployee {
+  cycleType: string;
+  cycles: string;
+  pitch: string;
+  intro: string;
+  university: string;
+  studyYear: string;
+  degreeType: string;
+  degree: string;
+  links: string[][];
+  graduationDate: Date;
+}

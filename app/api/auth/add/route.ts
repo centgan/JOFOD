@@ -1,34 +1,7 @@
 import {NextResponse} from "next/server";
 import {query} from "@/database";
+import {AddEmployer, AddEmployee} from "@/app/types/user";
 
-interface AddEmployer {
-  address: string;
-  hiringPreference: string;
-  website: string;
-  industry: string;
-  size: string;
-  summary: string;
-  values: string;
-  mission: string;
-  userType: string;
-  user_id: number;
-  company_id: number;
-}
-
-interface AddEmployee {
-  cycleType: string;
-  cycles: string;
-  pitch: string;
-  intro: string;
-  university: string;
-  studyYear: string;
-  degreeType: string;
-  degree: string;
-  links: string[];
-  graduationDate: Date;
-  userType: string;
-  user_id: number;
-}
 const employeeAddHandler = async (request:AddEmployee) => {
   // should probably figure out a way to make sure that this is indeed the first time that they are writing to it
   // actually not really sure how important it is maybe it can just overwrite it maybe not don't know yet but for now

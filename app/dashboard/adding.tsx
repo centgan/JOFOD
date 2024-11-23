@@ -11,7 +11,6 @@ interface AddEmployeeProps {
 const AddingComponent = ({ session }: AddEmployeeProps) => {
   return (
     <SessionProvider session={session}>
-      {/*<AddEmployer />*/}
       {session?.user.userType === 'Employee' ? <AddEmployee /> : <AddEmployer />}
     </SessionProvider>
   )

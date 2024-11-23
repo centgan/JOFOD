@@ -1,31 +1,9 @@
 "use client";
 import React, {useEffect, useState} from "react";
 import Select from "react-select";
-import {h} from "preact";
-import {Session} from "next-auth";
 import {useSession} from "next-auth/react";
-
-interface AddEmployee {
-  cycleType: string;
-  cycles: string;
-  pitch: string;
-  intro: string;
-  university: string;
-  studyYear: string;
-  degreeType: string;
-  degree: string;
-  links: string[];
-  graduationDate: Date;
-}
-
-interface OptionType {
-  value: string
-  label: string
-}
-
-interface AddEmployeeProps {
-  session: Session
-}
+import {OptionType, AddEmployee} from "@/app/types/user";
+import {useRouter} from "next/navigation";
 
 // for now this will get really messy but will hardcode the searchable dropdown options for now
 const universityOptions:OptionType[] = [
@@ -208,6 +186,7 @@ const Step2 = ({ formData, handleChange }) => {
           onChange={(e) => handleChange(e, 'studyYear')}
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         >
+          <option value="">Select...</option>
           <option value="1">1st Year</option>
           <option value="2">2nd Year</option>
           <option value="3">3rd Year</option>
@@ -236,6 +215,7 @@ const Step2 = ({ formData, handleChange }) => {
           onChange={(e) => handleChange(e, 'degree')}
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         >
+          <option value="">Select...</option>
           <option value="Bachelor">Bachelor</option>
           <option value="Master">Master</option>
           <option value="PhD">PhD</option>
@@ -281,7 +261,7 @@ const Step2 = ({ formData, handleChange }) => {
           onChange={(e) => handleChange(e, 'cycleType')}
           className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
         >
-          <option value="none">Select...</option>
+          <option value="">Select...</option>
           <option value="3">Trimester</option>
           <option value="4">Quarter</option>
           <option value="2">Semester</option>
@@ -394,15 +374,40 @@ const Step3 = ({formData, handleChange, handleRemoveLink}) => {
         <label htmlFor="links" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Links (Portfolio, LinkedIn, etc.)
         </label>
-        {formData.links.map((link, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <input
-              type="text"
-              name="links"
-              value={link}
-              onChange={(e) => handleChange(e, 'links', index)}
-              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
+        {formData.links.map((element, index) => (
+          <div key={index} className="flex items-center space-x-4"> {/* Space between the two input groups */}
+            <div className="flex-2"> {/* Larger right input */}
+              <select
+                id="links-type"
+                name="links-type"
+                value={element[0]}
+                onChange={(e) => handleChange(e, 'links-type', index)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              >
+                <option value="">Select...</option>
+                <option value="github">Github</option>
+                <option value="portfolio">Portfolio</option>
+                <option value="linkedin">LinkIn</option>
+                <option value="linkedin">LinkIn</option>
+                <option value="other">Other</option>
+              </select>
+              {/*<input*/}
+              {/*  type="text"*/}
+              {/*  name="links"*/}
+              {/*  value={element[0]}*/}
+              {/*  onChange={(e) => handleChange(e, 'links-type', index)}*/}
+              {/*  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"*/}
+              {/*/>*/}
+            </div>
+            <div className="flex-1 max-w-xs"> {/* Smaller left input */}
+              <input
+                type="text"
+                name="links-url"
+                value={element[1]}
+                onChange={(e) => handleChange(e, 'links-url', index)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              />
+            </div>
             <button
               type="button"
               onClick={() => handleRemoveLink(index)}
@@ -449,31 +454,37 @@ const AddEmployee = () => {
     degree: "",
     graduationDate: new Date(),
     intro: "",
-    links: [""],
+    links: [["github", ""]],
     pitch: "",
     studyYear: "",
     university: ""
   });
   const { data: session, status, update } = useSession();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | OptionType, name:string, index?: number) => {
-    console.log(name, index);
+    // console.log(name, index);
     if (e && (e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>).target) {
       const value = (e as React.ChangeEvent<HTMLInputElement>).target.value;
-      console.log(name, value, 'in here');
-      if (name === 'links') {
+      // console.log(name, value, 'in here');
+      if (name.includes('links')) {
         const updatedLinks = [...formData.links];
         if (index !== undefined) {
-          updatedLinks[index] = value;
+          if (name === 'links-type'){
+            updatedLinks[index][0] = value;
+          }
+          if (name === 'links-url'){
+            updatedLinks[index][1] = value;
+          }
         } else {
-          updatedLinks.push(''); // Add a new empty string to the array
+          updatedLinks.push(['', '']); // Add a new empty string to the array
         }
         setFormData((prevData) => ({
           ...prevData,
           links: updatedLinks,
         }));
       } else {
-        console.log(value.trim().split(" ").length);
+        // console.log(value.trim().split(" ").length);
         if ((name === 'pitch') && (value.trim().split(" ").length > 10)) {
           setMax(true);
         } else {
@@ -506,10 +517,37 @@ const AddEmployee = () => {
   const handleNext = () => setStep((prev) => prev + 1);
   const handlePrevious = () => setStep((prev) => prev - 1);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(formData);
-    alert('Form submitted successfully!');
+    const response = await fetch('/api/auth/add/', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...formData,
+        user_id: session?.user.id,
+        userType: 'employee',
+      }),
+    });
+
+    if (response?.status !== 200) {
+      console.log('internal error occurred');
+      return;
+    } else {
+      const res = await fetch('/api/auth/register/', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          user_id: session?.user.id,
+          first_time: 0,
+        }),
+      })
+      if (res.status !== 200) {
+        console.log('internal error occurred');
+        return;
+      }
+
+      await update({first_time: 0});
+      router.refresh();
+    }
   };
 
   return (

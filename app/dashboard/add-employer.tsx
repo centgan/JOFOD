@@ -191,10 +191,10 @@ const AddEmployer = () => {
       formData.size === '',
       formData.summary === '',
     ];
-    // if (required.some(value => value)) {
-    //   console.log('some fields are required');
-    //   return;
-    // }
+    if (required.some(value => value)) {
+      console.log('some fields are required');
+      return;
+    }
 
     const response = await fetch('/api/auth/add/', {
       method: 'POST',
