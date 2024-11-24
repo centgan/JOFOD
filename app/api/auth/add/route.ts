@@ -1,8 +1,8 @@
 import {NextResponse} from "next/server";
 import {query} from "@/database";
-import {AddEmployer, AddEmployee} from "@/app/types/user";
+import {AddEmployerBack, AddEmployeeBack} from "@/app/types/user";
 
-const employeeAddHandler = async (request:AddEmployee) => {
+const employeeAddHandler = async (request:AddEmployeeBack) => {
   // should probably figure out a way to make sure that this is indeed the first time that they are writing to it
   // actually not really sure how important it is maybe it can just overwrite it maybe not don't know yet but for now
   // skipping it
@@ -13,6 +13,7 @@ const employeeAddHandler = async (request:AddEmployee) => {
     request.studyYear, request.degreeType, request.degree, request.links, request.graduationDate, request.user_id];
   const results = await query(writing_sql, writing_params);
 
+  console.log(results, request);
   if (results.affectedRows !== 1) {
     return NextResponse.json({error: 'An internal server error occurred'}, {status: 500});
   }
@@ -20,7 +21,7 @@ const employeeAddHandler = async (request:AddEmployee) => {
   return NextResponse.json({status: 200});
 }
 
-const employerAddHandler = async (request:AddEmployer) => {
+const employerAddHandler = async (request:AddEmployerBack) => {
   // should probably figure out a way to make sure that this is indeed the first time that they are writing to it
   // actually not really sure how important it is maybe it can just overwrite it maybe not don't know yet but for now
   // skipping it

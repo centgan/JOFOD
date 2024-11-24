@@ -198,16 +198,16 @@ export async function PATCH(request: Request) {
   // update in session object
   // for now I know that I'm only using this patch for updating first time value, so I don't care about it.
 
-  const token = await getToken({ req:request, secret: process.env.NEXTAUTH_SECRET });
-  if (!token) {
-    return NextResponse.json({ message: 'No session token found.' }, { status: 401 });
-  }
-  session.user.first_time = 0; // Update the 'first_time' value in the token
-  token.first_time = 0;
-
-  console.log(session, 'token');
-  const updatedToken = await authOptions.callbacks.jwt({token, user: null});
-  const updatedSession = await authOptions.callbacks.session({ session, token: null });
+  // const token = await getToken({ req:request, secret: process.env.NEXTAUTH_SECRET });
+  // if (!token) {
+  //   return NextResponse.json({ message: 'No session token found.' }, { status: 401 });
+  // }
+  // session.user.first_time = 0; // Update the 'first_time' value in the token
+  // token.first_time = 0;
+  //
+  // console.log(session, 'token');
+  // const updatedToken = await authOptions.callbacks.jwt({token, user: null});
+  // const updatedSession = await authOptions.callbacks.session({ session, token: null });
 
   // update in database
   const update_sql = `UPDATE defaultdb.users SET ${other_key} = ? WHERE id = ?`;

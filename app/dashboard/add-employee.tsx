@@ -31,7 +31,7 @@ const Step1 = ({ formData, handleChange, max }) => {
           name="pitch"
           value={formData.pitch}
           onChange={(e) => handleChange(e, 'pitch')}
-          className={`mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:${max ? 'ring-red-500' : 'ring-blue-500'} dark:bg-gray-800 dark:border-gray-600 dark:text-white`}
+          className={`mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${max ? 'focus:ring-red-500' : 'focus:ring-blue-500'} dark:bg-gray-800 dark:border-gray-600 dark:text-white`}
         />
       </div>
 
@@ -99,9 +99,9 @@ const Step2 = ({ formData, handleChange }) => {
     const currentYear = new Date().getFullYear();
 
     if (formData.cycleType === '3') {
-      console.log({
-        [currentYear]: [false, false, false],
-      });
+      // console.log({
+      //   [currentYear]: [false, false, false],
+      // });
       setCheckboxes({
         [currentYear]: [false, false, false],
       });
@@ -122,9 +122,14 @@ const Step2 = ({ formData, handleChange }) => {
     }
   }, [formData.cycleType]);
 
+  useEffect(() => {
+    handleChange({target: {name: 'cycles', value: JSON.stringify(checkboxes)}}, 'cycles');
+    // console.log(JSON.stringify(checkboxes));
+  }, [checkboxes]);
+
   const years = Object.keys(checkboxes);
 
-  const handleCheckboxChange = (year: string, index: number) => {
+  const handleCheckboxChange = (year: number, index: number) => {
     setCheckboxes((prev) => ({
       ...prev,
       [year]: prev[year].map((checked, i) => (i === index ? !checked : checked)),
@@ -295,7 +300,7 @@ const Step2 = ({ formData, handleChange }) => {
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => handleCheckboxChange(year, index)}
+                        onChange={() => handleCheckboxChange(parseInt(year), index)}
                         className="form-checkbox h-4 w-4 text-blue-600"
                       />
                     </td>
@@ -474,7 +479,7 @@ const AddEmployee = () => {
             updatedLinks[index][0] = value;
           }
           if (name === 'links-url'){
-            updatedLinks[index][1] = value;
+            updatedLinks[index][1] = value.toLowerCase();
           }
         } else {
           updatedLinks.push(['', '']); // Add a new empty string to the array
@@ -498,7 +503,7 @@ const AddEmployee = () => {
     } else {
       // Handling react-select (if e is an OptionType)
       const selected = (e as OptionType).value
-      console.log(selected);
+      // console.log(selected);
       setFormData((prevData) => ({
         ...prevData,
         [name]: selected,  // Update the formData with the selected option
