@@ -4,6 +4,11 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 import {randomUUID} from "node:crypto";
 import {redirect} from "next/navigation";
+import Next from "next-auth/src";
+import {getServerSession} from "next-auth";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {signIn} from "next-auth/react";
+import {getToken} from "next-auth/jwt";
 
 const API_KEY = process.env.MAILGUN_API_KEY || ''
 const DOMAIN = process.env.MAILGUN_DOMAIN || ''
@@ -173,6 +178,45 @@ export async function POST(request: Request) {
   } else if (req_json.userType === 'employer') {
     return employerHandler(req_json);
   } else {
-    return NextResponse.json({ error: 'Usertype Undefined' }, {status: 404});
+    return NextResponse.json({ error: 'Usertype Undefined' }, {status: 400});
   }
 }
+
+// honestly might not be the right spot but whatever this is where I'm putting it
+export async function PATCH(request: Request) {
+  const session = await getServerSession(authOptions);
+  const req_json = await request.json();
+  const keys = Object.keys(req_json);
+  console.log(keys);
+  if (keys.length !== 2) {
+    return NextResponse.json({ error: 'invalid inputs' }, {status: 400});
+  } else if (!keys.includes('user_id')) {
+    return NextResponse.json({ error: 'user id key not found' }, {status: 400});
+  }
+
+  const other_key = keys.find(key => key !== 'user_id');
+  // update in session object
+  // for now I know that I'm only using this patch for updating first time value, so I don't care about it.
+
+  // const token = await getToken({ req:request, secret: process.env.NEXTAUTH_SECRET });
+  // if (!token) {
+  //   return NextResponse.json({ message: 'No session token found.' }, { status: 401 });
+  // }
+  // session.user.first_time = 0; // Update the 'first_time' value in the token
+  // token.first_time = 0;
+  //
+  // console.log(session, 'token');
+  // const updatedToken = await authOptions.callbacks.jwt({token, user: null});
+  // const updatedSession = await authOptions.callbacks.session({ session, token: null });
+
+  // update in database
+  const update_sql = `UPDATE defaultdb.users SET ${other_key} = ? WHERE id = ?`;
+  const update_params = [req_json[other_key], req_json['user_id']];
+  const results = await query(update_sql, update_params);
+  if (results.affectedRows !== 1) {
+    return NextResponse.json({ error: 'Database error' }, {status: 500 });
+  }
+
+  return NextResponse.json({ message: 'Session updated', session, }, {status: 200});
+}
+

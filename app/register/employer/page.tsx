@@ -79,8 +79,8 @@ export default function EmployerRegistrationPage() {
       return;
     } else {
       // redirect to get email verified page
-      console.log('should be pushing to new route now')
-      router.push('/register/email-verif')
+      console.log('should be pushing to new route now');
+      router.push('/register/email-verif');
       setEmailExists(false);
       setInternalError(false);
     }
