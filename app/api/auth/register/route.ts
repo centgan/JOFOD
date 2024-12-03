@@ -217,6 +217,6 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Database error' }, {status: 500 });
   }
 
-  return NextResponse.json({ message: 'Session updated', session, }, {status: 200});
+  return NextResponse.json({ message: 'Session updated' }, {status: 200});
 }
 
