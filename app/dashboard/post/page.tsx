@@ -3,6 +3,7 @@
 import PostingComponentOne from "@/app/dashboard/post/posting-one";
 import React, {useState} from "react";
 import PostingComponentTwo from "@/app/dashboard/post/posting-two";
+import {PostingType} from "@/app/types/job"
 
 const Review = ({formData}) => {
   console.log(formData, 'formData');
@@ -49,15 +50,20 @@ const Review = ({formData}) => {
 
 export default function PostingPage() {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PostingType>({
+    endDate: "",
+    templateID: "",
+    additionInfo: "",
+    additionQuestion: "",
+    compensation: "",
+    postType: "",
     jobTitle: "",
     jobDescription: "",
     jobResponsibilities: "",
     desiredExperience: "",
     location: "",
     workCycle: "",
-    addition: "",
-    // ALSO probably add in like compensation but leaving it for now
+    addition: ""
   });
 
   const handleNext = () => setStep((prev) => prev + 1);
@@ -70,6 +76,26 @@ export default function PostingPage() {
       [name]: value,
     });
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(formData);
+    const response = await fetch('/api/protected/jobs/', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...formData,
+      }),
+    });
+
+    if (response?.status !== 200) {
+      console.log('internal error occurred');
+      return;
+    }
+
+    console.log(response);
+    // await update({first_time: 0});
+    // router.refresh();
+  }
 
   return (
     <div>
@@ -99,7 +125,7 @@ export default function PostingPage() {
           ) : (
             <button
               type="submit"
-              // onClick={handleSubmit}
+              onClick={handleSubmit}
               className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md focus:outline-none"
             >
               Submit

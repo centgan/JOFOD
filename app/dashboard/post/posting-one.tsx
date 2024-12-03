@@ -84,8 +84,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
 
         {/* Job Responsibilities */}
         <div className="mb-4 col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Job
-            Responsibilities:</label>
+          <label className="block text-sm font-medium text-gray-700">Job Responsibilities:</label>
           <textarea
             id="jobResponsibilities"
             name="jobResponsibilities"
@@ -99,8 +98,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
 
         {/* Desired Experience (on its own row) */}
         <div className="mb-4 col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Desired
-            Experience:</label>
+          <label className="block text-sm font-medium text-gray-700">Desired Experience:</label>
           <textarea
             id="desiredExperience"
             name="desiredExperience"
@@ -108,6 +106,20 @@ const PostingComponentOne = ({formData, handleChange}) => {
             onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y"
             placeholder="Describe the desired experience for the candidate..."
+            required
+          />
+        </div>
+
+        {/* Desired Experience (on its own row) */}
+        <div className="mb-4 col-span-2">
+          <label className="block text-sm font-medium text-gray-700">Additional Information/Miscellaneous:</label>
+          <textarea
+            id="additionalInfo"
+            name="additionalInfo"
+            value={formData.additionalInfo}
+            onChange={handleChange}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y"
+            placeholder="Any additional information you want to provide..."
             required
           />
         </div>
@@ -128,8 +140,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
 
         {/* Work Cycle */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Work Cycle (e.g., Full-time,
-            Part-time):</label>
+          <label className="block text-sm font-medium text-gray-700">Work Cycle (e.g., Winter, Fall):</label>
           <input
             type="text"
             id="workCycle"
@@ -137,7 +148,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             value={formData.workCycle}
             onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            placeholder="Full-time, Part-time, etc."
+            placeholder="Winter, Fall, etc."
             required
           />
         </div>
