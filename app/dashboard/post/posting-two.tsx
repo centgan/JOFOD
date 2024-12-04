@@ -3,7 +3,7 @@
 import React, {useState} from "react";
 
 const PostingComponentTwo = ({formData, handleChange}) => {
-  const [rows, setRows] = useState([{ id: 1, value1: '', value2: '' }]); // Initial state with one row
+  const [rows, setRows] = useState([]); // Initial state with one row
 
   // Add a new row
   const addRow = () => {
@@ -12,11 +12,20 @@ const PostingComponentTwo = ({formData, handleChange}) => {
     //   id: converted[converted.length - 1].id+1,
     //   value1:
     // }
-    const newRow = {
-      id: rows[rows.length-1].id+1, // Unique id based on timestamp
-      value1: '',
-      value2: '',
-    };
+    let newRow = {};
+    if (rows.length > 0) {
+      newRow = {
+        id: rows[rows.length-1].id+1, // Unique id based on timestamp
+        value1: '',
+        value2: '',
+      };
+    } else {
+      newRow = {
+        id: 1,
+        value1: '',
+        value2: '',
+      }
+    }
     setRows((prevRows) => [...prevRows, newRow]);
   };
 
@@ -53,7 +62,7 @@ const PostingComponentTwo = ({formData, handleChange}) => {
               name="value1"
               value={row.value1}
               onChange={(e) => localChange(e, row.id)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
               placeholder="Enter value"
             />
           </div>
@@ -109,7 +118,7 @@ const PostingComponentTwo = ({formData, handleChange}) => {
             name="compensation"
             value={formData.compensation}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             placeholder="Enter compensation"
           />
         </div>
@@ -124,7 +133,7 @@ const PostingComponentTwo = ({formData, handleChange}) => {
               name="endDate"
               value={formData.endDate}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             />
           </div>
         )}

@@ -4,7 +4,18 @@ import PostingComponentOne from "@/app/dashboard/post/posting-one";
 import React, {useState} from "react";
 import PostingComponentTwo from "@/app/dashboard/post/posting-two";
 import {PostingType} from "@/app/types/job"
+import {useRouter} from "next/navigation";
 
+const formatText = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <>
+      {index > 0 && <br/>} {/* Insert <br /> tag between lines */}
+      {line}
+    </>
+  ));
+};
+
+// probably needs to use react-quill for fancy stuff
 const Review = ({formData}) => {
   console.log(formData, 'formData');
   return (
@@ -14,17 +25,17 @@ const Review = ({formData}) => {
       <div className="space-y-6">
         <div className="job-section">
           <h2 className="text-xl font-semibold text-gray-800">Job Description</h2>
-          <p className="text-gray-600">{formData.jobDescription}</p>
+          <p className="text-gray-600">{formatText(formData.jobDescription)}</p>
         </div>
 
         <div className="job-section">
           <h2 className="text-xl font-semibold text-gray-800">Responsibilities</h2>
-          <p className="text-gray-600">{formData.jobResponsibilities}</p>
+          <p className="text-gray-600">{formatText(formData.jobResponsibilities)}</p>
         </div>
 
         <div className="job-section">
           <h2 className="text-xl font-semibold text-gray-800">Desired Experience</h2>
-          <p className="text-gray-600">{formData.desiredExperience}</p>
+          <p className="text-gray-600">{formatText(formData.desiredExperience)}</p>
         </div>
 
         <div className="job-section">
@@ -52,7 +63,7 @@ export default function PostingPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<PostingType>({
     endDate: "",
-    templateID: "",
+    templateID: 0,
     additionInfo: "",
     additionQuestion: "",
     compensation: "",
@@ -65,6 +76,7 @@ export default function PostingPage() {
     workCycle: "",
     addition: ""
   });
+  const router = useRouter();
 
   const handleNext = () => setStep((prev) => prev + 1);
   const handlePrevious = () => setStep((prev) => prev - 1);
@@ -94,7 +106,7 @@ export default function PostingPage() {
 
     console.log(response);
     // await update({first_time: 0});
-    // router.refresh();
+    router.push('/dashboard');
   }
 
   return (

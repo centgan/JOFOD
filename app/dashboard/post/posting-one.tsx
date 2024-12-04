@@ -61,7 +61,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             value={formData.jobTitle}
             onChange={handleChange}
             ref={jobTitleRef}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             placeholder="Enter the job title..."
             style={{width: `${getInputWidth(formData.jobTitle)}px`}} // Dynamically adjust width
             required
@@ -76,7 +76,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="jobDescription"
             value={formData.jobDescription}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-40 resize-y"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-40 resize-y text-black"
             placeholder="Provide a detailed job description..."
             required
           />
@@ -90,7 +90,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="jobResponsibilities"
             value={formData.jobResponsibilities}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-40 resize-y"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-40 resize-y text-black"
             placeholder="List the main responsibilities for this position..."
             required
           />
@@ -104,7 +104,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="desiredExperience"
             value={formData.desiredExperience}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y text-black"
             placeholder="Describe the desired experience for the candidate..."
             required
           />
@@ -118,7 +118,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="additionalInfo"
             value={formData.additionalInfo}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-32 resize-y text-black"
             placeholder="Any additional information you want to provide..."
             required
           />
@@ -133,7 +133,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="location"
             value={formData.location}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             placeholder="Location (city, state or remote)"
           />
         </div>
@@ -147,7 +147,7 @@ const PostingComponentOne = ({formData, handleChange}) => {
             name="workCycle"
             value={formData.workCycle}
             onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
             placeholder="Winter, Fall, etc."
             required
           />
