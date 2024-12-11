@@ -18,30 +18,43 @@ async function getSessionObject() {
 export async function GET(request: Request) {
   // const req_json = await request.json();
   const url = new URL(request.url);
+  console.log(url);
+  const url_id = url.searchParams.get('id');
   const url_query = url.searchParams.get('query');
   const company = url.searchParams.get('company');
-  const location = url.searchParams.get('location');
+  const filter = url.searchParams.get('filter');
 
   let sql_query = 'SELECT * FROM defaultdb.jobs WHERE ';
   const params = [];
 
-  if (company){
-    sql_query += 'company_id = ?'
-    params.push(company);
+  // if requesting by job id then everything else should be empty
+  if (url_id) {
+    sql_query += 'job_id = ?';
+    params.push(url_id);
+  } else {
+    if (url_query){
+      sql_query += 'job_title like ?';
+      params.push(`%${url_query}%`);
+    }
+
+    if (company){
+      sql_query += 'company_id = ?'
+      params.push(company);
+    }
+
+    if (filter){
+      console.log('location', filter);
+    }
   }
 
-  if (url_query){
-    console.log('query', query);
+  if (sql_query.length === 35){
+    sql_query = 'SELECT * FROM defaultdb.jobs;';
   }
-
-  if (location){
-    console.log('location', location);
-  }
-  console.log(sql_query, '\n', params)
+  // console.log(sql_query, '\n', params);
   const results = await query(sql_query, params);
-  console.log(results);
+  // console.log(results);
   if (results.length <= 0){
-    return NextResponse.json({ message: 'No results found' }, {status: 204})
+    return NextResponse.json({status: 204})
   }
   return NextResponse.json(results, {status: 200});
 }
